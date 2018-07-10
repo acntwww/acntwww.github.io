@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>nky1989 Blog</title>
+    <description>开发 探索...</description>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Tue, 10 Jul 2018 13:51:29 +0000</pubDate>
+    <lastBuildDate>Tue, 10 Jul 2018 13:51:29 +0000</lastBuildDate>
+    <generator>Jekyll v3.8.3</generator>
+    
+      <item>
+        <title>Android adb &amp; 参数</title>
+        <description>&lt;!-- Chinese Version --&gt;
+&lt;div class=&quot;post-container&quot;&gt;
+    
+    &lt;p&gt;&lt;img src=&quot;http://p09ypv7br.bkt.clouddn.com/blog/android/adb.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://www.jpmorganchase.com/corporate/Corporate-Responsibility/images/cr-2016-ampersand.png&quot; alt=&quot;@&amp;amp;|center&quot; /&gt;
+在开发的过程中, 会经常用到&lt;code class=&quot;highlighter-rouge&quot;&gt;adb&lt;/code&gt;这个工具, 在使用的过程中, 比如下面的的命令用来启动一个&lt;code class=&quot;highlighter-rouge&quot;&gt;Activity&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;adb shell am start &lt;span class=&quot;nt&quot;&gt;-W&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt; android.intent.action.VIEW &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;hubble://hubble.MA-B5BA-D69CCCCF880F&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;如果只是想给&lt;code class=&quot;highlighter-rouge&quot;&gt;URI&lt;/code&gt;增加参数的话, 直接的&lt;code class=&quot;highlighter-rouge&quot;&gt;a=1&amp;amp;b=23&lt;/code&gt;是不行的&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;因为这是两个shell, 一个是电脑的, 另一个是Android手机的. 而&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;&lt;/code&gt;是一个特殊的字符, 会被电脑的shell给处理掉.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;解决的办法&quot;&gt;解决的办法&lt;/h2&gt;
+&lt;h4 id=&quot;1-使用转义&quot;&gt;1. 使用&lt;code class=&quot;highlighter-rouge&quot;&gt;\&amp;amp;&lt;/code&gt;转义&lt;/h4&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;adb shell am start &lt;span class=&quot;nt&quot;&gt;-W&lt;/span&gt;  &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; com.netease.hubbledata/.module.splash.page.SplashActivity &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt; android.intent.action.VIEW &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;hubble://hubble.MA-B5BA-D69CCCCF880F?token=abck4&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&amp;amp;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;type=qax&quot;&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;2-使用android的shell-避免被吃掉&quot;&gt;2. 使用&lt;code class=&quot;highlighter-rouge&quot;&gt;Android&lt;/code&gt;的shell, 避免被吃掉&lt;/h4&gt;
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; adb shell
+&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; am start &lt;span class=&quot;nt&quot;&gt;-W&lt;/span&gt;  &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; com.netease.hubbledata/.module.splash.page.SplashActivity &lt;span class=&quot;nt&quot;&gt;-a&lt;/span&gt; android.intent.action.VIEW &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;hubble://hubble.MA-B5BA-D69CCCCF880F?token=abck4&amp;amp;type=qax&quot;&lt;/span&gt; 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;其他的要转义的字符&quot;&gt;其他的要转义的字符&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;( ) &amp;lt; &amp;gt; | ; &amp;amp; * \ ~ &quot; '&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+&lt;p&gt;之前也遇到一个类似的问题, 好像给符号英语化之后, 加上一些关键词就能够找到想要的答案了.
+需要给常见的标点符号的英文给记忆一些, 能省不少的时间!&lt;/p&gt;
+
+&lt;h2 id=&quot;参考文档&quot;&gt;参考文档&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://issuetracker.google.com/issues/36982137&quot;&gt;adb shell input text can not input &amp;amp; text&lt;/a&gt;
+&lt;a href=&quot;https://stackoverflow.com/a/28468561/1294349&quot;&gt;How to input ampersand with adb shell input?&lt;/a&gt;
+&lt;a href=&quot;https://stackoverflow.com/a/31371987/1294349&quot;&gt;adb shell input text does not take &amp;amp; ampersand character&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://developer.android.com/studio/command-line/adb#IntentSpec&quot;&gt;Specification for intent arguments&lt;/a&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;The reason you need to doubly-escape the string is that there are two shells: your shell, and the adb shell&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;/div&gt;
+</description>
+        <pubDate>Wed, 12 Jul 2017 12:00:00 +0000</pubDate>
+        <link>http://localhost:4000/2017/07/12/android-adb-shell-and-param/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/07/12/android-adb-shell-and-param/</guid>
+        
+        <category>移动开发</category>
+        
+        <category>Android</category>
+        
+        <category>adb</category>
+        
+        <category>shell</category>
+        
+        
+      </item>
+    
+  </channel>
+</rss>
